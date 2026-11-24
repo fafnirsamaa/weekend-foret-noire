@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week-end Forêt-Noire et Alsace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1 id="titre"></h1>
+    <p id="dates" class="dates"></p>
+    <p id="base"></p>
+  </header>
+  <main id="contenu"></main>
+  <footer>Planning modifiable dans <code>data.js</code></footer>
+
+  <script src="data.js"></script>
+  <script>
+    const P = window.PLANNING;
+    const el = (tag, cls, txt) => {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (txt) e.textContent = txt;
+      return e;
+    };
+    document.getElementById("titre").textContent = P.titre;
+    document.getElementById("dates").textContent = P.dates;
+    document.getElementById("base").textContent = P.base;
+
+    const main = document.getElementById("contenu");
+
+    P.jours.forEach(j => {
+      const s = el("section", "carte");
+      const h = el("h2", null, j.titre);
+      h.appendChild(el("span", "sous", j.sousTitre));
+      s.appendChild(h);
+      const ul = el("ul", "timeline");
+      j.items.forEach(i => {
+        const li = el("li");
+        li.appendChild(el("strong", "heure", i.heure));
+        li.appendChild(el("span", null, i.texte));
+        ul.appendChild(li);
+      });
+      s.appendChild(ul);
+      main.appendChild(s);
+    });
+
+    const liste = (titre, items, cls) => {
+      const s = el("section", "carte " + cls);
+      s.appendChild(el("h2", null, titre));
+      const ul = el("ul", "puces");
+      items.forEach(t => ul.appendChild(el("li", null, t)));
+      s.appendChild(ul);
+      main.appendChild(s);
+    };
+    liste("Spécialités à ramener", P.specialites, "");
+    liste("À vérifier avant le départ", P.aVerifier, "alerte");
+  </script>
+</body>
+</html>
